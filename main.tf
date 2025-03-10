@@ -28,15 +28,11 @@ provider "aws" {
 }
 
 locals {
-  gtp = toset([for i in var.gtp-main-components : i])
-  module_sources = {
-    "v5.13.2" = "git::https://gitlab.com/1nce-tech/platform/research/bong-meta-proxy-pipeline/main-components.git?ref=v5.13.2"
-  }
+  gtp = var.gtp-main-components-single
 }
 
 module "tf-proxy" {
-  for_each = local.gtp
-  source   = local.module_sources[each.key]
+  source   = "git::https://gitlab.com/1nce-tech/platform/research/bong-meta-proxy-pipeline/main-components.git?ref=${local.gtp}"
 
   vpc_cidr_block     = var.vpc_cidr_block
   subnet_cidr        = var.subnet_cidr
